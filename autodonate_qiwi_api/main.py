@@ -76,11 +76,11 @@ class Qiwi:
             autodonate_qiwi_api.types.Transaction or None.
         """
         try:
-            m = models.Payment(txId=tx["txnId"])
+            m = models.Payment(tx_id=tx["txn_id"])
             m.save()
             transaction = types.Transaction(
-                txId=tx["txnId"],
-                personId=tx["personId"],
+                tx_id=tx["txn_id"],
+                person_id=tx["person_id"],
                 date=tx["date"],
                 account=tx["account"],
                 amount=tx["sum"]["amount"],

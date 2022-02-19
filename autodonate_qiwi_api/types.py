@@ -29,8 +29,8 @@ class Status:
 
 @dataclass
 class Transaction:
-    txId: int
-    personId: int
+    tx_id: int
+    person_id: int
     date: str
     status = Status.SUCCESS
     type = Operation.IN
