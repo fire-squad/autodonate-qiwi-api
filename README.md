@@ -11,9 +11,11 @@ def payment_received(tx: autodonate_qiwi_api.types.Transaction):
     print(f"Payment from {tx.account} with amount {tx.total} received!")
 
 
-autodonate_qiwi_api.initialize(token="abracadabra",
-                               phone=7900000000,
-                               callback=payment_received)
+autodonate_qiwi_api.initialize(
+    token="abracadabra",
+    phone=7900000000,
+    callback=payment_received,
+)
 ```
 
 Так же модуль объявляет `QIWI_API_INSTALLED` глобальную переменную 
