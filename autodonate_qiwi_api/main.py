@@ -1,9 +1,8 @@
-import autodonate_qiwi_api.types as types
-import autodonate_qiwi_api.models as models
+from autodonate_qiwi_api import types, models
 from autodonate.lib.utils.logger import get_logger
-import requests
-import time
-import threading
+from requests import get
+from time import sleep
+from threading import Thread
 
 
 log = get_logger(__name__)
@@ -47,7 +46,7 @@ class Qiwi:
         }
         self.unprocessed: list[types.Transaction] = []
         self.base_url = base_url
-        self.thread: threading.Thread | None = None
+        self.thread: Thread | None = None
 
     def generate_link(self) -> str:
         """Generate API link.
@@ -99,7 +98,7 @@ class Qiwi:
 
     def _loop(self) -> None:
         """Get all updates from QIWI."""
-        response = requests.get(self.generate_link(), headers=self.headers)
+        response = get(self.generate_link(), headers=self.headers)
         response.raise_for_status()
         r = response.json()
         for tx in r["data"]:
@@ -113,14 +112,14 @@ class Qiwi:
         """Blocking method."""
         while True:
             self._loop()
-            time.sleep(self.update_interval)
+            sleep(self.update_interval)
 
     def start_thread(self) -> None:
         """Non-blocking method. Launches self.start() in separate thread."""
         if self.thread:
             log.warning("Thread already initialized.")
             return None
-        self.thread = threading.Thread(target=self.start)
+        self.thread = Thread(target=self.start)
         self.thread.start()
 
 
