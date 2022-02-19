@@ -22,26 +22,18 @@ class Qiwi:
         sources: list | tuple = (types.Source.RUB,),
         callback=None,
     ):
-        """__init__() method.
+        """__init__ method.
 
-        :arg token:
-            API key taken from https://qiwi.com/api
-        :arg phone:
-            QIWI phone number
-        :arg rows:
-            Rows to fetch from QIWI API
-        :arg update_interval:
-            How frequently call API?
-        :arg base_url:
-            Base URL for QIWI API usually you dont need change this
-        :arg operation:
-            Types of operations to fetch
-        :arg sources:
-            Currencies to fetch
-        :arg callback:
-            Callable to call on each transaction.
-            Signature:
-                >>> def function(tx: autodonate_qiwi_api.types.Transaction)"""
+        Args:
+            token: API key taken from https://qiwi.com/api.
+            phone: QIWI phone number.
+            rows: Rows to fetch from QIWI API.
+            update_interval: How frequently call API?
+            base_url: Base URL for QIWI API usually you dont need change this.
+            operation: Types of operations to fetch.
+            sources: Currencies to fetch.
+            callback: Callable to call on each transaction.
+        """
         self.callback = callback
         self.token = token
         self.phone = phone
@@ -60,7 +52,9 @@ class Qiwi:
     def generate_link(self) -> str:
         """Generate API link.
 
-        :return API link (str)"""
+        Returns:
+            API link.
+        """
         sources = "&".join(
             [
                 f"sources%5B%{i}5D={self.sources[i].value}"
@@ -74,10 +68,14 @@ class Qiwi:
         return self.base_url + url
 
     def tx(self, tx) -> types.Transaction | None:
-        """Process individual tx from self._loop()
+        """Process individual tx from self._loop().
 
-        :arg tx: dict
-        :return autodonate_qiwi_api.types.Transaction or None"""
+        Args:
+            tx: dict.
+        
+        Returns:
+            autodonate_qiwi_api.types.Transaction or None.
+        """
         try:
             m = models.Payment(txId=tx["txnId"])
             m.save()
@@ -100,7 +98,7 @@ class Qiwi:
             return None
 
     def _loop(self) -> None:
-        """Get all updates from QIWI"""
+        """Get all updates from QIWI."""
         response = requests.get(self.generate_link(), headers=self.headers)
         response.raise_for_status()
         r = response.json()
@@ -112,7 +110,7 @@ class Qiwi:
             self.unprocessed = []
 
     def start(self) -> None:
-        """Blocking method"""
+        """Blocking method."""
         while True:
             self._loop()
             time.sleep(self.update_interval)
@@ -131,7 +129,7 @@ QIWI: Qiwi | None = None
 
 
 def initialize(*args, **kwargs) -> None:
-    """Create Qiwi object and start it"""
+    """Create Qiwi object and start it."""
     global QIWI
     if QIWI:
         log.warning("QIWI API already initialized.")
