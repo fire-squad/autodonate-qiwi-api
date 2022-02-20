@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "autodonate-qiwi-api"
-version = "0.1.0"
+version = "0.1.2"
 description = "QIWI API for Autodonate"
 authors = ["firesquare <team@firesquare.ru>"]
 readme = "README.md"

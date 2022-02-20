@@ -121,17 +121,3 @@ class Qiwi:
             return None
         self.thread = Thread(target=self.start)
         self.thread.start()
-
-
-# Don't create millions of separated objects (and threads). Use only one.
-QIWI: Qiwi | None = None
-
-
-def initialize(*args, **kwargs) -> None:
-    """Create Qiwi object and start it."""
-    global QIWI
-    if QIWI:
-        log.warning("QIWI API already initialized.")
-        return None
-    QIWI = Qiwi(*args, **kwargs)
-    QIWI.start_thread()
